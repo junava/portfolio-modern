@@ -1284,7 +1284,7 @@ if (modalButtons) {
                 </label>
                 <label style="display:flex; align-items:center; gap:0.3rem;">
                     <input type="radio" name="soundPack" value="hardstyle" ${this.soundPack === 'hardstyle' ? 'checked' : ''}>
-                    <span>DISTORTIOOOOOON</span>
+                    <span>DISTORTIOOOOOON (enable me if you want brain damage)</span>
                 </label>
             </div>
         </div>
@@ -1332,5 +1332,6 @@ if (modalButtons) {
     // Initialize game
 
     const game = new Tetris();
+
 
 
