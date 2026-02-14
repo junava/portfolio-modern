@@ -4,7 +4,7 @@
 
 A personal portfolio website built in the **brutalist/manual** aesthetic – raw, grid‑based, monospaced, and highly interactive. Inspired by [The Creative Website Manual™](https://www.creativewebmanual.com), this site functions both as a showcase and a playground for experimental front‑end features.
 
-🔗 **Live demo:** [junava.github.io/portfolio](https://junava.github.io/portfolio)
+🔗 **Live demo:** [junava.github.io/portfolio-modern](https://junava.github.io/portfolio-modern)
 
 ---
 
