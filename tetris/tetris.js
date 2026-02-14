@@ -173,14 +173,14 @@ const SRS_KICKS = {
             // soft drop factor can be adjusted based on level or set to a constant multiplier of gravity
         this.softDropActive = false;
           this.sounds = {
-    rotate: new Audio('tetris/tetris/sounds/rotate.wav'),
-    hardDrop: new Audio('tetris/tetris/sounds/harddrop.wav'),
-    lineClear: new Audio('tetris/tetris/sounds/lineclear.wav'),
-    tetris: new Audio('tetris/tetris/sounds/tetris.wav'),
-    tSpin: new Audio('tetris/tetris/sounds/tspin.wav'),
-    hold: new Audio('tetris/tetris/sounds/hold.wav'),
-    gameOver: new Audio('tetris/tetris/sounds/gameover.wav'),
-    win: new Audio('tetris/tetris/sounds/win.wav')
+    rotate: new Audio('tetris/sounds/rotate.wav'),
+    hardDrop: new Audio('tetris/sounds/harddrop.wav'),
+    lineClear: new Audio('tetris/sounds/lineclear.wav'),
+    tetris: new Audio('tetris/sounds/tetris.wav'),
+    tSpin: new Audio('tetris/sounds/tspin.wav'),
+    hold: new Audio('tetris/sounds/hold.wav'),
+    gameOver: new Audio('tetris/sounds/gameover.wav'),
+    win: new Audio('tetris/sounds/win.wav')
 };
        this.muted = false;
     this.soundVolume = 0.5;
@@ -1290,4 +1290,5 @@ this.keys[e.keyCode] = false;
     }
 
     // Initialize game
+
     const game = new Tetris();
