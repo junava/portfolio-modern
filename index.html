@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>junava [ systems · css ]</title>
+  <!-- GSAP + ScrollTrigger + Lenis -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.5/dist/lenis.min.js"></script>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@350;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Styles -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- LOADING SCREEN — FULL SCREEN, TYPING ANIMATION -->
+<div id="loading-screen" class="loading-screen">
+  <div class="loading-container">
+    <div class="loading-header">
+      <span class="loading-coords">[X].0px [Y].0px</span>
+      <span class="loading-copyright">©JUNAVA — 2026</span>
+    </div>
+    
+    <div class="loading-main">
+      <div class="loading-title">
+        <span class="loading-line" id="typing-line-1"></span>
+        <span class="loading-line" id="typing-line-2"></span>
+      </div>
+      
+      <div class="loading-progress">
+        <span class="loading-percent" id="loading-percent">0%</span>
+        <div class="loading-bar-container">
+          <div class="loading-bar" id="loading-bar"></div>
+        </div>
+      </div>
+      
+      <div class="loading-modules">
+        <span class="loading-module" id="module-1"></span>
+        <span class="loading-module" id="module-2"></span>
+        <span class="loading-module" id="module-3"></span>
+        <span class="loading-module" id="module-4"></span>
+        <span class="loading-module" id="module-5"></span>
+      </div>
+    </div>
+    
+    <div class="loading-footer">
+      <span class="loading-status" id="loading-status">[ LOADING ]</span>
+      <span class="loading-symbols">⌘ ⌫ ⎔ ⍟ ⌬</span>
+    </div>
+  </div>
+</div>
+
+  <!-- CUSTOM MAGNETIC CURSOR -->
+  <div class="cursor" id="cursor">
+    <span>+</span>
+  </div>
+
+  <div class="container">
+    
+    <!-- header / coordinates -->
+    <div class="grid-12 header-section reveal-lines">
+      <div class="span-6">
+        <span class="coords reveal-line">[X]<span id="mouse-x">0</span>px [Y]<span id="mouse-y">0</span>px</span>
+        <h1 class="reveal-line">JOACHIM<br>ULRICH NAVA</h1>
+        <div class="header-meta">
+          <span class="reveal-line">systems // css</span>
+          <span class="reveal-line">tvl track</span>
+          <span class="reveal-line">ph</span>
+        </div>
+      </div>
+      <div class="span-5 header-right">
+        <span class="coords reveal-line">©JUNAVA — 2026 — inspired by <a href="https://www.creativewebmanual.com" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="inspiration-link magnetic-target">The Creative Website Manual™</a></span>
+ <!-- SYMBOL GRID - SQUARE, CIRCLE, TRIANGLE, STAR, PLUS -->
+        <div class="symbol-grid reveal-line">
+          <span class="symbol">□</span>
+          <span class="symbol">○</span>
+          <span class="symbol">⊿</span>
+          <span class="symbol">*</span>
+          <span class="symbol">+</span>
+        </div>
+        <div class="header-location reveal-line">
+          student / computer systems servicing<br>
+          negros occidental high school
+        </div>
+            <!-- VERSION / BUILD INFO -->
+        <div class="build-info reveal-line">
+          <span class="build-version">v2.4.1</span>
+          <span class="build-date">BUILD: 2026.02.13</span>
+          <span class="build-commit">COMMIT: e048c8b</span>
+        </div>
+        <!-- TYPE SPECIMEN / TEST PATTERN -->
+        <div class="type-specimen reveal-line">
+          <span>Aa ██ 75%</span>
+          <span>ﬁ ﬂ 1.6rem</span>
+          <span>IBM Plex Mono</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- active ingredients -->
+    <div class="ingredients reveal-lines">
+      <span class="ingredient-item reveal-line"><span class="ingredient-label">active//</span><span class="ingredient-value">data entry</span></span>
+      <span class="ingredient-item reveal-line"><span class="ingredient-label">core//</span><span class="ingredient-value">networking</span></span>
+      <span class="ingredient-item reveal-line"><span class="ingredient-label">stack//</span><span class="ingredient-value">windows server</span></span>
+      <span class="ingredient-item reveal-line"><span class="ingredient-label">method//</span><span class="ingredient-value">p2p + client-server</span></span>
+      <span class="ingredient-item reveal-line"><span class="ingredient-label">lead//</span><span class="ingredient-value">10+ projects</span></span>
+    <span class="ingredient-item reveal-line github-break">
+  <span class="ingredient-label">github//</span>
+  <span class="ingredient-value">
+    <a href="https://github.com/junava" target="_blank" rel="noopener noreferrer" class="ingredient-link magnetic-target">
+      junava
+    </a>
+  </span>
+</span>
+    </div>
+
+
+    <!-- chapter 01 : about -->
+    <div class="grid-12 about-section reveal-lines">
+      <div class="span-3">
+        <h2 class="chapter-label reveal-line">01.</h2>
+        <span class="decon-sub reveal-line">about</span>
+      </div>
+      <div class="span-9">
+        <div class="about-statement reveal-line">
+          Dedicated student with a keen interest in computer systems, 
+          troubleshooting, and collaborative problem-solving.
+        </div>
+        <div class="about-grid">
+          <div>
+            <span class="sub-marker reveal-line">approach</span>
+            <p class="approach-text reveal-line">
+              I thrive in dynamic environments where I can apply problem-solving 
+              abilities and collaborate with others. Committed to expanding 
+              knowledge in computer science.
+            </p>
+          </div>
+          <div>
+            <span class="sub-marker reveal-line">contact // direct</span>
+            <ul class="contact-list">
+              <li class="reveal-line">+63 981 062 2254</li>
+              <li class="reveal-line">
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=navajoachim@gmail.com" class="contact-email magnetic-target" target="_blank" rel="noopener noreferrer">navajoachim@gmail.com</a></li>
+              <li class="reveal-line">Brgy. Estefania, Bacolod</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- chapter 02 : competencies -->
+    <div class="grid-12 competencies-section reveal-lines">
+      <div class="span-3">
+        <h2 class="chapter-label reveal-line">02.</h2>
+        <span class="decon-sub reveal-line">competencies</span>
+      </div>
+      <div class="span-9">
+        <div class="skill-cloud">
+          <span class="reveal-line">Data Entry</span>
+          <span class="reveal-line">Google/MS Suite</span>
+          <span class="reveal-line">OS Installation</span>
+          <span class="reveal-line">P2P & Client-Server</span>
+          <span class="reveal-line">Troubleshooting</span>
+          <span class="reveal-line">Hardware Assembly</span>
+          <span class="reveal-line">Team Leadership</span>
+        </div>
+        
+        <div class="competencies-grid">
+          <div>
+            <span class="sub-marker bordered reveal-line">current //</span>
+            <div class="spec-list">
+              <div class="spec-row reveal-line">
+                <span class="spec-label">os</span>
+                <span class="spec-value">Windows 10 / Server 2019</span>
+              </div>
+              <div class="spec-row reveal-line">
+                <span class="spec-label">network</span>
+                <span class="spec-value">peer-to-peer, client-server, basic TCP/IP</span>
+              </div>
+              <div class="spec-row reveal-line">
+                <span class="spec-label">hardware</span>
+                <span class="spec-value">assembly, disassembly, component-level maintenance</span>
+              </div>
+              <div class="spec-row reveal-line">
+                <span class="spec-label">applications</span>
+                <span class="spec-value">MS Office, Google Suite, CRM data entry</span>
+              </div>
+              <div class="spec-row reveal-line">
+                <span class="spec-label">leadership</span>
+                <span class="spec-value">team lead (10+ CSS activities), peer troubleshooting</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <span class="sub-marker bordered reveal-line">traits</span>
+            <div class="traits-list">
+              <span class="reveal-line">→ time management</span>
+              <span class="reveal-line">→ adaptability</span>
+              <span class="reveal-line">→ organization</span>
+              <span class="reveal-line">→ peer assistance</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- chapter 2.3 : experience -->
+    <div class="experience-block reveal-lines">
+      <div class="grid-12">
+        <div class="span-3">
+          <span class="decon-sub small reveal-line">chapter 2.3</span>
+          <div class="decon-head reveal-line">Experience</div>
+        </div>
+        <div class="span-9">
+          <div class="project-row">
+            <div class="project-header">
+              <span class="reveal-line">outsourced tasks // part-time</span>
+              <span class="project-date reveal-line">2024–present</span>
+            </div>
+            <div class="project-desc">
+              <span class="reveal-line">data entry – CRM encoding</span>
+              <span class="reveal-line">document editing</span>
+            </div>
+          </div>
+          <div class="project-row">
+            <div class="project-header">
+              <span class="reveal-line">school computer tasks</span>
+              <span class="project-date reveal-line">2024–present</span>
+            </div>
+            <div class="project-desc flex-wrap">
+              <span class="reveal-line">hardware assembly/disassembly</span>
+              <span class="reveal-line">p2p & client-server setup</span>
+              <span class="reveal-line">win10/server config</span>
+              <span class="reveal-line">team leader – 10+ CSS activities</span>
+              <span class="reveal-line">assisted classmates troubleshooting</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- chapter: awards + education -->
+    <div class="grid-12 awards-section reveal-lines">
+      <div class="span-3">
+        <span class="decon-sub reveal-line">awards //</span>
+        <span class="decon-sub edu-spacer reveal-line">edu</span>
+      </div>
+      <div class="span-9">
+        <div class="stat-grid">
+          <div class="stat-item reveal-line">
+            <div class="stat-number">high</div>
+            <div class="stat-label">honors</div>
+            <div class="stat-desc">academic excellence</div>
+          </div>
+          <div class="stat-item reveal-line">
+            <div class="stat-number">10+</div>
+            <div class="stat-label">css activities</div>
+            <div class="stat-desc">hands-on completed</div>
+          </div>
+          <div class="stat-item reveal-line">
+            <div class="stat-number">3+</div>
+            <div class="stat-label">practical tasks</div>
+            <div class="stat-desc">troubleshooting / os / networking</div>
+          </div>
+          <div class="stat-item reveal-line">
+            <div class="stat-number">'19</div>
+            <div class="stat-label">—present</div>
+            <div class="stat-desc">Negros Occ. High School</div>
+          </div>
+        </div>
+        <div class="elementary-row">
+          <span class="reveal-line">Estefania Elementary School</span>
+          <span class="elementary-date reveal-line">2013–2019</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- chapter: interests -->
+    <div class="interests-block reveal-lines">
+      <div class="grid-12">
+        <div class="span-3">
+          <h2 class="chapter-label borderless reveal-line">//</h2>
+          <span class="decon-sub reveal-line">interests</span>
+        </div>
+        <div class="span-9">
+          <div class="interests-bar">
+            <span class="reveal-line">manga</span>
+            <span class="reveal-line">video games</span>
+            <span class="reveal-line">new tech</span>
+            <span class="reveal-line">music/composing</span>
+            <span class="reveal-line">
+              <a href="https://www.youtube.com/@JUNava2795" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="magnetic-target interest-link">
+              youtube
+              </a>
+            </span>
+            <span class="reveal-line">anime</span>
+          </div>
+          <div class="interests-footer reveal-line">
+            ← exploring, learning, composing
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="reveal-line">
+
+    <!-- footer -->
+    <div class="grid-12 footer-section reveal-lines">
+      <div class="span-6">
+        <span class="footer-statement reveal-line">constantly learning //</span>
+        <span class="footer-sub reveal-line">passion projects, systems, networking</span>
+      </div>
+      <div class="span-6 footer-right">
+        <span class="coords reveal-line">[location] brgy. estefania, bacolod</span>
+        <span class="coords footer-contact reveal-line">[contact] +63 981 062 2254</span>
+        <span class="coords footer-github reveal-line">  <a href="https://github.com/junava" target="_blank"  rel="noopener noreferrer"  class="footer-link magnetic-target"> [github] junava </a></span>
+        <span class="coords footer-cv reveal-line"><a href="../assets/cv.pdf" download class="footer-link magnetic-target"> [cv] download ↱</a></span>
+      </div>
+    </div>
+  </div>
+
+   <!-- ========== GALLERY SECTION ========== -->
+  <div id="gallery-reveal" class="gallery-fade">
+  <section class="gallery-section">
+    <div class="gallery-header">
+      <span class="decon-sub">gallery //</span>
+      <span class="coords">drag ↔</span>
+    </div>
+    <div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
+      <img class="image" src="../assets/imgs/img (1).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (2).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (3).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (4).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (5).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (6).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (7).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (8).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (9).jpg" draggable="false" alt=""/>
+    </div>
+  </div>
+  </section>
+
+<!-- chapter 03 : projects -->
+<div class="grid-12 projects-section reveal-lines" id="projects-reveal">
+  <div class="span-3">
+    <h2 class="chapter-label reveal-line">03.</h2>
+    <span class="decon-sub reveal-line">projects</span>
+  </div>
+  <div class="span-9">
+    
+    <!-- EMBEDDED LIVE CALCULATOR -->
+<div class="live-calc" id="liveCalc">
+  <div class="live-calc-header">
+    <span class="live-calc-title">[CALC v1.0]</span>
+    <span class="live-calc-date">2026</span>
+  </div>
+  
+  <!-- OPERATION PREVIEW -->
+  <div class="live-calc-preview" id="liveCalcPreview"></div>
+  
+  <!-- DISPLAY -->
+  <div class="live-calc-display" id="liveCalcDisplay">0</div>
+  
+  <!-- BUTTON GRID -->
+  <div class="live-calc-buttons">
+    <button class="live-calc-btn magnetic-target" data-value="7">7</button>
+    <button class="live-calc-btn magnetic-target" data-value="8">8</button>
+    <button class="live-calc-btn magnetic-target" data-value="9">9</button>
+    <button class="live-calc-btn operator magnetic-target" data-value="/">÷</button>
+    
+    <button class="live-calc-btn magnetic-target" data-value="4">4</button>
+    <button class="live-calc-btn magnetic-target" data-value="5">5</button>
+    <button class="live-calc-btn magnetic-target" data-value="6">6</button>
+    <button class="live-calc-btn operator magnetic-target" data-value="*">×</button>
+    
+    <button class="live-calc-btn magnetic-target" data-value="1">1</button>
+    <button class="live-calc-btn magnetic-target" data-value="2">2</button>
+    <button class="live-calc-btn magnetic-target" data-value="3">3</button>
+    <button class="live-calc-btn operator magnetic-target" data-value="-">–</button>
+    
+    <button class="live-calc-btn magnetic-target" data-value="0">0</button>
+    <button class="live-calc-btn magnetic-target" data-value=".">.</button>
+    <button class="live-calc-btn equals magnetic-target" data-value="=">=</button>
+    <button class="live-calc-btn operator magnetic-target" data-value="+">+</button>
+    
+    <button class="live-calc-btn clear magnetic-target" data-value="C">C</button>
+    <button class="live-calc-btn clear magnetic-target" data-value="CE">CE</button>
+  </div>
+</div>
+
+    <!-- PROJECT 2: PLACEHOLDER / COMING SOON -->
+    <div class="project-card reveal-line coming-soon">
+      <div class="project-card-header">
+        <span class="project-card-title">⍟ IMAGE GALLERY</span>
+        <span class="project-card-date">2026</span>
+      </div>
+      <div class="project-card-content">
+        <p class="project-card-text">Drag‑horizontal gallery with parallax. Scroll reveal, magnetic cursor.</p>
+        <div class="project-card-tags">
+          <span class="project-tag">JS</span>
+          <span class="project-tag">CSS</span>
+          <span class="project-tag">GSAP</span>
+        </div>
+        <span class="coming-soon-label">// IN PROGRESS</span>
+      </div>
+    </div>
+
+    <!-- PROJECT 3: PLACEHOLDER -->
+    <div class="project-card reveal-line coming-soon">
+      <div class="project-card-header">
+        <span class="project-card-title">⌬ PORTFOLIO v2</span>
+        <span class="project-card-date">2026</span>
+      </div>
+      <div class="project-card-content">
+        <p class="project-card-text">This site. Brutalist/manual aesthetic, custom cursor, grid system.</p>
+        <div class="project-card-tags">
+          <span class="project-tag">HTML</span>
+          <span class="project-tag">CSS</span>
+          <span class="project-tag">JS</span>
+          <span class="project-tag">LENIS</span>
+        </div>
+        <div class="project-inspiration">
+        <a href="https://www.creativewebmanual.com" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="inspiration-link magnetic-target">
+          ← inspired by The Creative Website Manual™
+        </a>
+        </div>
+        <span class="coming-soon-label">// LIVE</span>
+      </div>
+      <!-- PROJECT 4: TETRIS -->
+<div class="project-card reveal-line">
+  <div class="project-card-header">
+    <span class="project-card-title">◈ TETRIS</span>
+    <span class="project-card-date">2026</span>
+  </div>
+  <div class="project-card-content">
+    <div class="project-card-description">
+      <p class="project-card-text">JavaScript Tetris. Classic block-stacking, keyboard controls, brutalist styling.</p>
+      <div class="project-card-tags">
+        <span class="project-tag">JS</span>
+        <span class="project-tag">CANVAS</span>
+        <span class="project-tag">CSS</span>
+        <span class="project-tag">KEYBOARD</span>
+      </div>
+    </div>
+    
+    <!-- STATIC PREVIEW + LINK -->
+    <div class="project-tetris-preview reveal-line">
+      <a href="../tetris.html" 
+         target="_blank" 
+         rel="noopener noreferrer" 
+         class="tetris-preview-link magnetic-target">
+        
+        <div class="tetris-mini-grid">
+          <span class="tetris-cell filled"></span>
+          <span class="tetris-cell"></span>
+          <span class="tetris-cell filled"></span>
+          <span class="tetris-cell filled"></span>
+          <span class="tetris-cell"></span>
+          <span class="tetris-cell"></span>
+          <span class="tetris-cell filled"></span>
+          <span class="tetris-cell filled"></span>
+          <span class="tetris-cell"></span>
+          <span class="tetris-cell filled"></span>
+          <span class="tetris-cell"></span>
+          <span class="tetris-cell filled"></span>
+          <span class="tetris-cell filled"></span>
+          <span class="tetris-cell"></span>
+          <span class="tetris-cell"></span>
+          <span class="tetris-cell"></span>
+        </div>
+        
+        <span class="preview-caption reveal-line">▶ PLAY TETRIS</span>
+      </a>
+    </div>
+    
+    <span class="coming-soon-label reveal-line">// PLAYABLE</span>
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+
+<!-- theme toggle - single button -->
+<button class="theme-toggle" id="themeToggle" aria-label="Switch theme">
+  <span class="theme-icon light-icon">○</span>
+  <span class="theme-icon dark-icon">●</span>
+</button>
+
+  </div>
+
+  
+  <!-- Scripts -->
+  <script src="../scripts/script.js"></script>
+</body>
+</html>
+
