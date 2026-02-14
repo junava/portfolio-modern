@@ -1,0 +1,720 @@
+
+
+
+/* —————————— TETRIS STYLES — COMPACT BRUTALIST —————————— */
+:root {
+  --mono: 'IBM Plex Mono', 'Courier New', Courier, monospace;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --border-light: #d4d4d4;
+  --border-dark: #3a3a3a;
+  --bg-light: #f9f9f9;
+  --bg-dark: #0a0a0a;
+  --text-light: #0c0c0c;
+  --text-dark: #ebebeb;
+  --accent: #888;
+  --accent-soft: #aaa;
+  --button-hover-light: #eaeaea;
+  --button-hover-dark: #2a2a2a;
+}
+
+* {
+  cursor: none !important;
+}
+
+/* Ensure the custom cursor is visible */
+.cursor {
+  display: flex !important;
+  opacity: 1 !important;
+}
+
+ 
+
+/* —————————— MAIN CONTAINER —————————— */
+
+.game-container {
+  display: grid;
+  grid-template-columns: 200px 300px 350px; /* right panel widened */
+  gap: 1.5rem;
+  max-width: 1150px; /* allow extra space */
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: transparent;
+  font-family: var(--sans);
+  color: var(--text-light);
+  justify-content: center;
+}
+
+body.dark .game-container {
+  color: var(--text-dark);
+}
+
+/* Dark mode button overrides */
+body.dark .btn,
+body.dark .mode-btn,
+body.dark .control-btn {
+  color: #ebebeb !important;
+  border-color: #444 !important;
+  background: transparent !important;
+}
+
+body.dark .btn:hover,
+body.dark .mode-btn:hover,
+body.dark .control-btn:hover {
+  background: #2a2a2a !important;
+  border-color: #ebebeb !important;
+}
+
+/* Active mode button (selected preview) */
+body.dark .mode-btn.active {
+  border-color: #ebebeb !important;
+  color: #ebebeb !important;
+  background: #333 !important;
+}
+
+/* Primary button (Start, Save) */
+body.dark .btn.primary {
+  border-color: #ebebeb !important;
+  color: #ebebeb !important;
+}
+
+body.dark .btn.primary:hover {
+  background: #ebebeb !important;
+  color: #0a0a0a !important;
+}
+
+/* Modal buttons */
+body.dark .modal-buttons .btn {
+  border-color: #444;
+}
+
+/* Control keys in dark mode */
+body.dark .control-key {
+  background: #111 !important;
+  color: #ebebeb !important;
+  border-color: #444 !important;
+}
+
+/* Also fix any other modal text */
+body.dark .control-label,
+body.dark .slider-group label,
+body.dark .modal-content h2 {
+  color: #ebebeb !important;
+}
+
+body.dark .slider-group input {
+  background: #333;
+}
+
+html, body {
+  overflow: hidden;
+  height: 100%;
+} 
+
+/* —————————— PANELS —————————— */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 200px; /* fixed */
+  flex-shrink: 0;
+}
+
+.panel-box {
+  background: transparent;
+  border: 1px solid var(--border-light);
+  padding: 0.8rem;
+  transition: border-color 0.1s;
+}
+
+body.dark .panel-box {
+  border-color: var(--border-dark);
+}
+
+.panel-title {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.2rem;
+}
+
+body.dark .panel-title {
+  color: var(--accent-soft);
+  border-bottom-color: var(--border-dark);
+}
+
+.panel-value {
+  font-family: var(--mono);
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--text-light);
+  letter-spacing: -0.02em;
+}
+
+body.dark .panel-value {
+  color: var(--text-dark);
+}
+
+/* —————————— STATS ROW (compact) —————————— */
+.stats-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  border: 1px solid var(--border-light);
+  padding: 0.6rem;
+  margin-bottom: 0.3rem;
+  justify-content: space-between;
+}
+.stats-row {
+  display: flex;
+  flex-wrap: nowrap;      /* prevent wrapping */
+  gap: 0.3rem;
+  border: 1px solid var(--border-light);
+  padding: 0.6rem;
+  margin-bottom: 0.3rem;
+  justify-content: space-between;
+}
+
+/* Let the time item take more space */
+.stat-item.time-item {
+  flex: 2;                 /* twice the space of others */
+  min-width: 80px;        /* ensure minimum width for timer */
+}
+
+.stat-item {
+  flex: 1;
+  min-width: 40px;
+  text-align: center;
+  border-top: 2px solid var(--text-light);
+  padding-top: 0.2rem;
+}
+
+/* Optional: slightly smaller font for timer if still tight */
+.stat-item.time-item .stat-value {
+  font-size: 1.1rem;      /* adjust as needed */
+}
+
+body.dark .stats-row {
+  border-color: var(--border-dark);
+}
+
+.stat-item {
+  flex: 1;
+  min-width: 40px;
+  text-align: center;
+  border-top: 2px solid var(--text-light);
+  padding-top: 0.2rem;
+}
+
+body.dark .stat-item {
+  border-top-color: var(--text-dark);
+}
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.1rem;
+}
+
+.stat-value {
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-light);
+  display: block;
+}
+
+body.dark .stat-value {
+  color: var(--text-dark);
+}
+
+/* —————————— PROGRESS BAR —————————— */
+.progress-bar {
+  height: 2px;
+  background: var(--border-light);
+  margin-top: 0.4rem;
+  overflow: hidden;
+}
+
+body.dark .progress-bar {
+  background: var(--border-dark);
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--text-light);
+  width: 0%;
+  transition: width 0.2s;
+}
+
+body.dark .progress-fill {
+  background: var(--text-dark);
+}
+
+/* —————————— MODE SELECTOR —————————— */
+.mode-selector {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.mode-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--border-light);
+  color: var(--accent);
+  padding: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s, color 0.1s;
+}
+
+.mode-btn:hover {
+  background: var(--button-hover-light);
+  border-color: var(--text-light);
+  color: var(--text-light);
+}
+
+.mode-btn.active {
+  background: var(--text-light);
+  border-color: var(--text-light);
+  color: var(--bg-light);
+}
+
+body.dark .mode-btn {
+  border-color: var(--border-dark);
+  color: var(--accent-soft);
+}
+
+body.dark .mode-btn:hover {
+  background: var(--button-hover-dark);
+  border-color: var(--text-dark);
+  color: var(--text-dark);
+}
+
+body.dark .mode-btn.active {
+  background: var(--text-dark);
+  border-color: var(--text-dark);
+  color: var(--bg-dark);
+}
+
+/* —————————— GHOST TOGGLE —————————— */
+.ghost-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.3rem 0;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+
+/* —————————— BUTTONS —————————— */
+.btn, .control-btn {
+  background: transparent;
+  border: 1px solid var(--border-light);
+  color: var(--text-light);
+  padding: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s, color 0.1s;
+  text-align: center;
+}
+
+.game-buttons {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* —————————— GAME BOARD —————————— */
+#game {
+  background: transparent;
+  border: 2px solid var(--border-light);
+  display: block;
+  width: 300px;
+  height: 600px;
+}
+
+body.dark #game {
+  border-color: var(--border-dark);
+}
+
+.game-status {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  height: 2rem;
+  line-height: 2rem;
+  text-align: center;
+}
+
+/* —————————— PREVIEW CANVASES —————————— */
+#next, #hold {
+  width: 100px;
+  height: 100px;
+}
+
+#preview-queue {
+  width: 120px;
+  height: 400px;
+}
+
+#next, #hold, #preview-queue {
+  background: transparent;
+  border: 1px solid var(--border-light);
+  display: block;
+  margin: 0 auto;
+}
+
+body.dark #next, body.dark #hold, body.dark #preview-queue {
+  border-color: var(--border-dark);
+}
+
+/* —————————— CONTROLS MODAL — IMPROVED —————————— */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  background: var(--bg-light);
+  border: 2px solid var(--text-light);
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  font-family: var(--mono);
+  color: var(--text-light);
+}
+
+body.dark .modal-content {
+  background: var(--bg-dark);
+  border-color: var(--text-dark);
+  color: var(--text-dark);
+}
+
+.modal-content h2 {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.5rem;
+}
+
+body.dark .modal-content h2 {
+  border-bottom-color: var(--border-dark);
+}
+
+/* —————————— CONTROLS GRID —————————— */
+.controls-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--border-light);
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  transition: border-color 0.1s;
+}
+
+body.dark .control-row {
+  border-color: var(--border-dark);
+}
+
+.control-label {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--border-light);
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  transition: border-color 0.1s;
+}
+
+.control-label {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  flex: 0 0 auto; /* prevent label from shrinking */
+  margin-right: 1rem;
+}
+
+.control-key {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  border: 1px solid var(--border-light);
+  padding: 0.3rem 0.8rem;
+  min-width: 70px;
+  text-align: center;
+  background: transparent;
+  color: var(--text-light);
+  margin: 0 0.5rem;
+  flex: 0 0 auto; /* fixed width */
+}
+
+.control-change {
+  background: transparent;
+  border: 1px solid var(--border-light);
+  color: var(--accent);
+  padding: 0.3rem 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.1s;
+  flex: 0 0 auto; /* fixed width based on content */
+  white-space: nowrap;
+}
+
+.control-change:hover {
+  background: var(--button-hover-light);
+  border-color: var(--text-light);
+  color: var(--text-light);
+}
+
+body.dark .control-change {
+  border-color: var(--border-dark);
+  color: var(--accent-soft);
+}
+
+body.dark .control-change:hover {
+  background: var(--button-hover-dark);
+  border-color: var(--text-dark);
+  color: var(--text-dark);
+}
+
+/* —————————— SLIDER ROW —————————— */
+.slider-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.slider-group {
+  width: 100%;
+}
+
+.slider-group label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.slider-group label span {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+body.dark .slider-group label span {
+  color: var(--text-dark);
+}
+
+.slider-group input[type="range"] {
+  width: 100%;
+  background: transparent;
+  accent-color: var(--text-light);
+  height: 2px;
+}
+
+body.dark .slider-group input[type="range"] {
+  accent-color: var(--text-dark);
+}
+
+.slider-group small {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--accent-soft);
+  display: block;
+  margin-top: 0.2rem;
+}
+
+/* —————————— SONIC DROP CHECKBOX —————————— */
+.sonic-checkbox {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+
+.sonic-checkbox input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--text-light);
+}
+
+body.dark .sonic-checkbox input[type="checkbox"] {
+  accent-color: var(--text-dark);
+}
+
+/* —————————— MODAL BUTTONS —————————— */
+.modal-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  justify-content: flex-end;
+}
+
+.modal-buttons .btn {
+  min-width: 100px;
+}
+/* —————————— RESPONSIVE —————————— */
+@media (max-width: 800px) {
+  .game-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  .panel {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .panel-box {
+    width: auto;
+    min-width: 150px;
+    flex: 1;
+  }
+  .stats-row {
+    width: 100%;
+  }
+  #game {
+    width: 300px;
+    height: 600px;
+    margin: 0 auto;
+  }
+}
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.cursor {
+      position: fixed;
+      width: auto;
+      height: auto;
+      background: transparent !important;
+      border: none !important;
+      pointer-events: none;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: #0c0c0c;
+      font-family: var(--mono, 'IBM Plex Mono', monospace);
+      line-height: 1;
+      left: 0;
+      top: 0;
+      transition: color 0.2s;
+    }
+    .cursor span {
+      display: block;
+      transition: transform 0.2s ease;
+    }
+    .cursor.hover span {
+      transform: rotate(90deg) scale(1.4);
+    }
+    body.dark .cursor {
+      color: #ebebeb;
+    }
+
+    /* ----- Theme toggle (matches main site) ----- */
+    .theme-toggle {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 0;
+      background: #0c0c0c;
+      border: 1px solid #2a2a2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      transition: background 0.2s;
+      padding: 0;
+      color: white;
+    }
+    .theme-toggle .theme-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+      display: block;
+    }
+    .light-icon { display: block; }
+    .dark-icon { display: none; }
+    body.dark .light-icon { display: none; }
+    body.dark .dark-icon { display: block; }
+    body.dark .theme-toggle {
+      background: #ebebeb;
+      color: #0c0c0c;
+    }
+
+    /* Disable cursor on mobile (optional) */
+    @media (max-width: 800px) {
+      .cursor { display: none; }
+      body, button { cursor: auto; }
+    }
