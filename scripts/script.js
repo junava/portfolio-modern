@@ -460,12 +460,18 @@ handleOnMove({ clientX: 0 });
   }
 
   function updatePreview() {
-    if (operator && previousInput !== '') {
-      preview.innerText = `${previousInput} ${operator} ${currentInput}`;
+  if (operator && previousInput !== '') {
+    if (resetDisplay) {
+      // Still waiting for second operand – show only first + operator
+      preview.innerText = `${previousInput} ${operator} `;
     } else {
-      preview.innerText = '';
+      // Second operand is being typed
+      preview.innerText = `${previousInput} ${operator} ${currentInput}`;
     }
+  } else {
+    preview.innerText = '';
   }
+}
 
   // Number input
   function inputNumber(num) {
@@ -625,5 +631,6 @@ handleOnMove({ clientX: 0 });
       clearEntry();
     }
   });
+
 
 })();
