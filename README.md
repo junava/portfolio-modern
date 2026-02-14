@@ -35,5 +35,20 @@ A personal portfolio website built in the **brutalist/manual** aesthetic – raw
 - **Fonts** – `IBM Plex Mono` (monospace) + `Inter` (sans‑serif).
 
 ---
+🧠 INSPIRATION & CREDITS
+Layout and typography heavily influenced by The Creative Website Manual™.
 
-## 📁 PROJECT STRUCTURE
+Magnetic cursor idea adapted from various brutalist portfolios.
+
+Tetris game logic originally written by myself but inspired by jstris, TETR.io, and the official 2009 Tetris Design manual and restyled to match the portfolio aesthetic.
+
+---
+📄 LICENSE
+This project is open source and available under the MIT License. Feel free to use it as a reference or starting point for your own brutalist portfolio.
+
+---
+Made with ⌇ by Joachim Ulrich S. Nava
+📍 Bacolod City, Philippines · 📧 navajoachim@gmail.com
+---
+
+This README captures the essence of the project, provides clear navigation for anyone viewing the repo, and credits the inspiration. Adjust the live demo URL, email, and any specific Tetris credits as needed.
