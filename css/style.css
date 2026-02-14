@@ -1882,6 +1882,10 @@ body.loading .loading-screen * {
   pointer-events: none; /* keep clickable if needed */
 }
 
+.live-calc-btn {
+  cursor: none !important;
+}
+
 /* Disable text selection in gallery */
 .gallery-section,
 .gallery-header,
@@ -1891,4 +1895,5 @@ body.loading .loading-screen * {
   -webkit-user-select: none !important;
   -moz-user-select: none !important;
   -ms-user-select: none !important;
+
 }
