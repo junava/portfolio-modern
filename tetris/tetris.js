@@ -127,7 +127,9 @@ const SRS_KICKS = {
         constructor() {
             this.musicEnabled = false;
             this.mobileControlsEnabled = false; 
-           this.continuousInterval = null;
+            this.continuousInterval = null;
+            this.soundPack = 'glitch'; // default sound pack
+            
             // Load settings first so controls are set before reset
             this.loadSettings();
             this.reset();          // this no longer touches this.controls
@@ -1695,6 +1697,7 @@ document.getElementById('mobile-controls-toggle').addEventListener('change', (e)
     // Initialize game
 
     const game = new Tetris();
+
 
 
 
