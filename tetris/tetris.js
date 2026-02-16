@@ -134,25 +134,31 @@ const SRS_KICKS = {
             this.initUI();
             this.setupEvents();
 
-           this.musicPlayer = new Audio();
-    this.musicPlayer.volume = this.musicVolume;
-    this.musicPlayer.loop = false;
+            this.musicPlayer = new Audio();
+            this.musicPlayer.volume = this.musicVolume;
+            this.musicPlayer.loop = false;
 
-    this.trackList = ['track1.mp3', 'track2.mp3', 'track3.mp3']; // your files
-    this.currentTrackIndex = 0;
-    this.musicPlaying = false;
+            this.trackList = ['track1.mp3', 'track2.mp3', 'track3.mp3']; // your files  
+            this.playOrder = [];
+            this.playIndex = 0;
+            this.musicPlaying = false;
 
-    this.musicPlayer.onended = () => {
+// Create the initial shuffled order (if shuffle enabled, it will be shuffled later)
+this.resetPlaylist();
+
+this.musicPlayer.onended = () => {
+    // Move to next track
+    this.playIndex++;
+    if (this.playIndex >= this.playOrder.length) {
+        // End of playlist – reshuffle or loop
         if (this.shuffleEnabled) {
-            let newIndex;
-            do {
-                newIndex = Math.floor(Math.random() * this.trackList.length);
-            } while (this.trackList.length > 1 && newIndex === this.currentTrackIndex);
-            this.currentTrackIndex = newIndex;
+            this.shufflePlaylist();
         } else {
-            this.currentTrackIndex = (this.currentTrackIndex + 1) % this.trackList.length;
+            // Sequential: just reset to beginning
+            this.playIndex = 0;
         }
-        this.playMusic();
+    }
+    this.playMusic();
 };
             
         }
@@ -213,10 +219,6 @@ this.soundFiles = {
 
     this.muted = false;
     this.soundVolume = 0.5;
-
-    
-    this.trackList = ['track1.mp3', 'track2.mp3', 'track3.mp3']; // filenames
-    this.currentTrackIndex = 0;
         }
 
         loadSettings() {
@@ -1257,32 +1259,23 @@ stopContinuousAction() {
 playMusic() {
     if (!this.musicEnabled) return;
 
-    // Determine next track index
-    if (this.shuffleEnabled) {
-        // Pick a random track different from the current one (optional)
-        let newIndex;
-        do {
-            newIndex = Math.floor(Math.random() * this.trackList.length);
-        } while (this.trackList.length > 1 && newIndex === this.currentTrackIndex);
-        this.currentTrackIndex = newIndex;
-    } else {
-        // Sequential (already handled by onended, but we set index)
-        // If called externally, we use the current index.
-    }
+    this.musicPlayer.pause();
+    this.musicPlayer.currentTime = 0;
 
-    const src = `music/${this.trackList[this.currentTrackIndex]}`;
+    if (this.playOrder.length === 0) this.resetPlaylist();
+
+    const trackIdx = this.playOrder[this.playIndex];
+    const src = `music/${this.trackList[trackIdx]}`;
     this.musicPlayer.src = src;
     this.musicPlayer.play()
-        .then(() => {
-            this.musicPlaying = true;
-        })
+        .then(() => this.musicPlaying = true)
         .catch(err => {
             console.error('Music play failed:', err);
             this.musicPlaying = false;
         });
 }
     
-sstopMusic() {
+stopMusic() {
     this.musicPlayer.pause();
     this.musicPlayer.currentTime = 0; // reset to beginning
     this.musicPlaying = false;
@@ -1305,11 +1298,29 @@ resumeMusic() {
 
 setMusicVolume(vol) {
     this.musicVolume = Math.max(0, Math.min(1, vol));
-    if (this.musicPlaying) {
-        this.musicTracks[this.currentTrack].volume = this.musicVolume;
-    }
+    if (this.musicPlayer) this.musicPlayer.volume = this.musicVolume;
     this.saveSettings();
 }
+
+buildSequentialOrder() {
+    this.playOrder = Array.from({ length: this.trackList.length }, (_, i) => i);
+    this.playIndex = 0;
+}
+
+shufflePlaylist() {
+    if (this.playOrder.length === 0) this.buildSequentialOrder();
+    for (let i = this.playOrder.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [this.playOrder[i], this.playOrder[j]] = [this.playOrder[j], this.playOrder[i]];
+    }
+    this.playIndex = 0;
+}
+
+resetPlaylist() {
+    if (this.shuffleEnabled) this.shufflePlaylist();
+    else this.buildSequentialOrder();
+}
+
         initUI() {
             this.draw();
             this.drawNext();
@@ -1609,7 +1620,7 @@ const mobileToggleHTML = `
     <div id="${mobileToggleContainerId}" style="margin:0.5rem 0;">
         <label style="display:flex; align-items:center; gap:0.5rem; font-family:var(--mono); color:var(--accent);">
             <input type="checkbox" id="mobile-controls-toggle" ${this.mobileControlsEnabled ? 'checked' : ''}>
-            <span>Show on‑screen controls (for touch devices, beta)</span>
+            <span>Show on‑screen controls (for touch devices)</span>
         </label>
     </div>
 `;
@@ -1635,16 +1646,14 @@ document.getElementById('mobile-controls-toggle').addEventListener('change', (e)
 
     document.getElementById('music-enable').addEventListener('change', (e) => {
         this.musicEnabled = e.target.checked;
-        if (this.musicEnabled && this.active && !this.paused) {
-            this.resumeMusic();
-        } else {
-            this.pauseMusic();
-        }
+        if (this.musicEnabled) this.playMusic();
+        else this.pauseMusic();
         this.saveSettings();
     });
 
     document.getElementById('shuffle-checkbox').addEventListener('change', (e) => {
         this.shuffleEnabled = e.target.checked;
+        this.resetPlaylist();
         this.saveSettings();
     });
 
@@ -1686,6 +1695,5 @@ document.getElementById('mobile-controls-toggle').addEventListener('change', (e)
     // Initialize game
 
     const game = new Tetris();
-
 
 
