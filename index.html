@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@350;400;500;600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
   <!-- Styles -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
@@ -90,8 +90,8 @@
         </div>
             <!-- VERSION / BUILD INFO -->
         <div class="build-info reveal-line">
-          <span class="build-version">v2.4.1</span>
-          <span class="build-date">BUILD: 2026.02.13</span>
+          <span class="build-version">v2.4.2</span>
+          <span class="build-date">BUILD: 2026.02.16</span>
           <span class="build-commit">COMMIT: e048c8b</span>
         </div>
         <!-- TYPE SPECIMEN / TEST PATTERN -->
@@ -123,7 +123,7 @@
 
 
     <!-- chapter 01 : about -->
-    <div class="grid-12 about-section reveal-lines">
+    <div class="grid-12 about-section reveal-lines" id="about-section">
       <div class="span-3">
         <h2 class="chapter-label reveal-line">01.</h2>
         <span class="decon-sub reveal-line">about</span>
@@ -156,7 +156,7 @@
     </div>
 
     <!-- chapter 02 : competencies -->
-    <div class="grid-12 competencies-section reveal-lines">
+    <div class="grid-12 competencies-section reveal-lines" id="competencies-section">
       <div class="span-3">
         <h2 class="chapter-label reveal-line">02.</h2>
         <span class="decon-sub reveal-line">competencies</span>
@@ -324,34 +324,34 @@
         <span class="coords reveal-line">[location] brgy. estefania, bacolod</span>
         <span class="coords footer-contact reveal-line">[contact] +63 981 062 2254</span>
         <span class="coords footer-github reveal-line">  <a href="https://github.com/junava" target="_blank"  rel="noopener noreferrer"  class="footer-link magnetic-target"> [github] junava </a></span>
-        <span class="coords footer-cv reveal-line"><a href="assets/cv.pdf" download class="footer-link magnetic-target"> [cv] download ↱</a></span>
+        <span class="coords footer-cv reveal-line"><a href="../assets/cv.pdf" download class="footer-link magnetic-target"> [cv] download ↱</a></span>
       </div>
     </div>
   </div>
 
    <!-- ========== GALLERY SECTION ========== -->
-  <div id="gallery-reveal" class="gallery-fade">
+  <div id="gallery-reveal" class="gallery-fade" id="gallery-section">
   <section class="gallery-section">
     <div class="gallery-header">
       <span class="decon-sub">gallery //</span>
       <span class="coords">drag ↔</span>
     </div>
     <div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
-      <img class="image" src="assets/imgs/img (1).jpg" draggable="false" alt=""/>
-      <img class="image" src="assets/imgs/img (2).jpg" draggable="false" alt=""/>
-      <img class="image" src="assets/imgs/img (3).jpg" draggable="false" alt=""/>
-      <img class="image" src="assets/imgs/img (4).jpg" draggable="false" alt=""/>
-      <img class="image" src="assets/imgs/img (5).jpg" draggable="false" alt=""/>
-      <img class="image" src="assets/imgs/img (6).jpg" draggable="false" alt=""/>
-      <img class="image" src="assets/imgs/img (7).jpg" draggable="false" alt=""/>
-      <img class="image" src="assets/imgs/img (8).jpg" draggable="false" alt=""/>
-      <img class="image" src="assets/imgs/img (9).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (1).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (2).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (3).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (4).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (5).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (6).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (7).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (8).jpg" draggable="false" alt=""/>
+      <img class="image" src="../assets/imgs/img (9).jpg" draggable="false" alt=""/>
     </div>
   </div>
   </section>
 
 <!-- chapter 03 : projects -->
-<div class="grid-12 projects-section reveal-lines" id="projects-reveal">
+<div class="grid-12 projects-section reveal-lines" id="projects-reveal" id="projects-section">
   <div class="span-3">
     <h2 class="chapter-label reveal-line">03.</h2>
     <span class="decon-sub reveal-line">projects</span>
@@ -493,6 +493,8 @@
   </div>
 </div>
 
+
+
 <!-- theme toggle - single button -->
 <button class="theme-toggle" id="themeToggle" aria-label="Switch theme">
   <span class="theme-icon light-icon">○</span>
@@ -500,16 +502,26 @@
 </button>
 
   </div>
+<button class="menu-btn" id="menuToggle" aria-label="Chapters">MENU [+]</button>
+  <!-- Chapters navigation panel -->
+<div class="chapters-panel" id="chaptersPanel">
+  <div class="chapters-header">
+    <span class="chapters-title">[ SECTIONS ]</span>
+      <button class="chapters-close" id="chaptersClose">
+    CLOSE <span class="nav_plus">[X]</span>
+  </button>
 
+  </div>
+  <ul class="chapters-list">
+    <li><a href="#about-section" class="chapter-link">01. about</a></li>
+    <li><a href="#competencies-section" class="chapter-link">02. competencies</a></li>
+    <li><a href="#gallery-section" class="chapter-link">03. gallery</a></li>
+    <li><a href="#projects-section" class="chapter-link">04. projects</a></li>
+  </ul>
+</div>
   
   <!-- Scripts -->
-  <script src="scripts/script.js"></script>
+  <script src="/scripts/script.js"></script>
 </body>
 </html>
-
-
-
-
-
-
 
