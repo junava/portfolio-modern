@@ -472,7 +472,6 @@ handleOnMove({ clientX: 0 });
     preview.innerText = '';
   }
 }
-
   // Number input
   function inputNumber(num) {
     if (resetDisplay) {
@@ -632,5 +631,52 @@ handleOnMove({ clientX: 0 });
     }
   });
 
+})();
 
+// ---------- CHAPTERS MENU ----------
+(function() {
+  const menuBtn = document.getElementById('menuToggle');
+  const chaptersPanel = document.getElementById('chaptersPanel');
+  const closeBtn = document.getElementById('chaptersClose');
+
+  if (!menuBtn || !chaptersPanel) return;
+
+  // Open panel
+  menuBtn.addEventListener('click', () => {
+    chaptersPanel.classList.add('active');
+  });
+
+  // Close panel
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      chaptersPanel.classList.remove('active');
+    });
+  }
+
+  // Close panel when clicking outside (optional)
+  document.addEventListener('click', (e) => {
+    if (!chaptersPanel.contains(e.target) && !menuBtn.contains(e.target) && chaptersPanel.classList.contains('active')) {
+      chaptersPanel.classList.remove('active');
+    }
+  });
+
+  // Smooth scroll to sections using Lenis (if available)
+  const links = document.querySelectorAll('.chapter-link');
+  links.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href'); // e.g. "#about-section"
+      const target = document.querySelector(targetId);
+      if (target) {
+        // Use Lenis if available, otherwise fallback to native scroll
+        if (window.lenis) {
+          window.lenis.scrollTo(target);
+        } else {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+        // Close panel after clicking
+        chaptersPanel.classList.remove('active');
+      }
+    });
+  });
 })();
