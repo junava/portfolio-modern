@@ -1620,7 +1620,7 @@ const mobileToggleHTML = `
     <div id="${mobileToggleContainerId}" style="margin:0.5rem 0;">
         <label style="display:flex; align-items:center; gap:0.5rem; font-family:var(--mono); color:var(--accent);">
             <input type="checkbox" id="mobile-controls-toggle" ${this.mobileControlsEnabled ? 'checked' : ''}>
-            <span>Show on‑screen controls (for touch devices)</span>
+            <span>Show on‑screen controls (for touch devices, beta)</span>
         </label>
     </div>
 `;
@@ -1695,5 +1695,6 @@ document.getElementById('mobile-controls-toggle').addEventListener('change', (e)
     // Initialize game
 
     const game = new Tetris();
+
 
 
