@@ -125,11 +125,36 @@ const SRS_KICKS = {
     // ==================== TETRIS GAME CLASS ====================
     class Tetris {
         constructor() {
+            this.musicEnabled = false;
+            this.mobileControlsEnabled = false; 
+           this.continuousInterval = null;
             // Load settings first so controls are set before reset
             this.loadSettings();
             this.reset();          // this no longer touches this.controls
             this.initUI();
             this.setupEvents();
+
+           this.musicPlayer = new Audio();
+    this.musicPlayer.volume = this.musicVolume;
+    this.musicPlayer.loop = false;
+
+    this.trackList = ['track1.mp3', 'track2.mp3', 'track3.mp3']; // your files
+    this.currentTrackIndex = 0;
+    this.musicPlaying = false;
+
+    this.musicPlayer.onended = () => {
+        if (this.shuffleEnabled) {
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * this.trackList.length);
+            } while (this.trackList.length > 1 && newIndex === this.currentTrackIndex);
+            this.currentTrackIndex = newIndex;
+        } else {
+            this.currentTrackIndex = (this.currentTrackIndex + 1) % this.trackList.length;
+        }
+        this.playMusic();
+};
+            
         }
 
         reset() {
@@ -181,16 +206,17 @@ this.soundFiles = {
     tSpin: 'tspin.wav',
     hold: 'hold.wav',
     gameOver: 'gameover.wav',
-    win: 'win.wav'
+    win: 'win.wav', 
+    countdownTick: 'countdown-tick.wav',
+    countdownGo: 'countdown-go.wav'
 };
 
+    this.muted = false;
+    this.soundVolume = 0.5;
 
-       this.muted = false;
-    this.soundVolume = 1;
-    this.softDropLandedSoundPlayed = false;
-
-
-            
+    
+    this.trackList = ['track1.mp3', 'track2.mp3', 'track3.mp3']; // filenames
+    this.currentTrackIndex = 0;
         }
 
         loadSettings() {
@@ -214,9 +240,39 @@ this.soundFiles = {
         if (sonic) this.sonicDrop = sonic === 'true';
         else this.sonicDrop = false;
 
+        const muted = localStorage.getItem('tetris-muted');
+        if (muted) this.muted = muted === 'true';
+        else this.muted = false;
+
+        const volume = localStorage.getItem('tetris-volume');
+        if (volume) this.soundVolume = parseFloat(volume);
+        else this.soundVolume = 0.5;
+
         const soundPack = localStorage.getItem('tetris-soundPack');
         if (soundPack) this.soundPack = soundPack;
+
+        const musicEnabled = localStorage.getItem('tetris-musicEnabled');
+        if (musicEnabled) this.musicEnabled = musicEnabled === 'true';
+        else this.musicEnabled = true;
+
+        const musicVolume = localStorage.getItem('tetris-musicVolume');
+        if (musicVolume) this.musicVolume = parseFloat(musicVolume);
+        else this.musicVolume = 0.3;
+
+        const shuffleEnabled = localStorage.getItem('tetris-shuffleEnabled');
+        if (shuffleEnabled) this.shuffleEnabled = shuffleEnabled === 'true';
+        else this.shuffleEnabled = true;
+        
+        const mobileEnabled = localStorage.getItem('tetris-mobile-controls');
+if (mobileEnabled !== null) {
+    this.mobileControlsEnabled = mobileEnabled === 'true';
+} else {
+    // Auto‑detect touch capability on first visit
+    this.mobileControlsEnabled = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+}
     }
+
+    
 
     saveSettings() {
         localStorage.setItem('tetris-controls', JSON.stringify(this.controls));
@@ -226,6 +282,16 @@ this.soundFiles = {
         localStorage.setItem('tetris-sdf', this.softDropFactor);
         localStorage.setItem('tetris-sonic', this.sonicDrop);
         localStorage.setItem('tetris-soundPack', this.soundPack);
+
+        localStorage.setItem('tetris-muted', this.muted);
+        localStorage.setItem('tetris-volume', this.soundVolume);
+        localStorage.setItem('tetris-soundPack', this.soundPack);
+        localStorage.setItem('tetris-musicEnabled', this.musicEnabled);
+        localStorage.setItem('tetris-musicVolume', this.musicVolume);
+
+        localStorage.setItem('tetris-shuffleEnabled', this.shuffleEnabled);
+
+        localStorage.setItem('tetris-mobile-controls', this.mobileControlsEnabled);
     }
 
         // ==================== PIECE GENERATION ====================
@@ -654,9 +720,11 @@ this.soundFiles = {
     }
 
         // ==================== GAME CONTROL ====================
-        start() {
+        async start() {
         if (this.active && !this.over) return;
         if (this.over) this.reset(); // Reset if game was over
+        
+        await this.startCountdown();    
         
         this.active = true;
         this.paused = false;
@@ -671,6 +739,11 @@ this.soundFiles = {
         this.lastTime = performance.now();
         this.lastSecond = performance.now();
         this.gameLoop();
+
+        // Start music only if not already playing
+        if (!this.musicPlaying) {
+        this.playMusic();
+        }
     }
 
         pause() {
@@ -717,6 +790,38 @@ this.soundFiles = {
 
         this.updateUI();
     }
+
+startCountdown() {
+    return new Promise((resolve) => {
+        const overlay = document.getElementById('countdown-overlay');
+        const numberEl = document.getElementById('countdown-number');
+        if (!overlay || !numberEl) {
+            resolve();
+            return;
+        }
+
+        overlay.style.display = 'flex';
+        let count = 3;
+        numberEl.textContent = count;
+        this.playSound('countdownTick');  // tick for initial 3
+
+        const interval = setInterval(() => {
+            count--;
+            if (count > 0) {
+                numberEl.textContent = count;
+                this.playSound('countdownTick'); // tick for 2,1
+            } else if (count === 0) {
+                numberEl.textContent = 'GO!';
+                this.playSound('countdownGo');   // go sound
+            } else {
+                clearInterval(interval);
+                overlay.style.display = 'none';
+                resolve();
+            }
+        }, 800);
+    });
+}
+
         gameLoop(time = 0) {
         // CRITICAL: Check game over state FIRST
         if (!this.active || this.over) return;
@@ -1059,12 +1164,160 @@ ctx.setLineDash([]);
     audio.volume = this.soundVolume ?? 0.5;
         audio.play().catch(err => console.error('Audio play error:', err));
     }
+
+    toggleMobileControls() {
+    const mobileDiv = document.getElementById('mobile-controls');
+    if (!mobileDiv) return;
+    mobileDiv.classList.toggle('hidden', !this.mobileControlsEnabled);
+}
+
+setupMobileControls() {
+    document.querySelectorAll('.mobile-btn').forEach(btn => {
+        const action = btn.dataset.action;
+        // Touch events
+        btn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.handleMobileAction(action, true);
+        });
+        btn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            this.handleMobileAction(action, false);
+        });
+        // Mouse events for testing on PC
+        btn.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            this.handleMobileAction(action, true);
+        });
+        btn.addEventListener('mouseup', (e) => {
+            e.preventDefault();
+            this.handleMobileAction(action, false);
+        });
+        btn.addEventListener('mouseleave', () => {
+            if (action === 'moveLeft' || action === 'moveRight' || action === 'softDrop') {
+                this.stopContinuousAction();
+            }
+        });
+    });
+}
+
+handleMobileAction(action, isPressed) {
+    if (!this.active || this.paused || this.over) return;
+
+    // Continuous actions
+    if (action === 'moveLeft' || action === 'moveRight' || action === 'softDrop') {
+        if (isPressed) {
+            this.startContinuousAction(action);
+        } else {
+            this.stopContinuousAction();
+        }
+        return;
+    }
+
+    // One‑shot actions
+    if (isPressed) {
+        switch (action) {
+            case 'rotateCW': this.rotate(1); break;
+            case 'rotateCCW': this.rotate(-1); break;
+            case 'rotate180': this.rotate(2); break;
+            case 'hardDrop': this.hardDrop(); break;
+            case 'hold': this.holdPiece(); break;
+            case 'pause': this.pause(); break;
+        }
+    }
+}
+
+startContinuousAction(action) {
+    if (this.continuousInterval) clearInterval(this.continuousInterval);
+    // Immediate first action
+    if (action === 'moveLeft') this.move(-1);
+    else if (action === 'moveRight') this.move(1);
+    else if (action === 'softDrop') this.drop();
+
+    // Repeat at ~10 times per second
+    this.continuousInterval = setInterval(() => {
+        if (!this.active || this.paused || this.over) {
+            this.stopContinuousAction();
+            return;
+        }
+        if (action === 'moveLeft') this.move(-1);
+        else if (action === 'moveRight') this.move(1);
+        else if (action === 'softDrop') this.drop();
+    }, 100);
+}
+
+stopContinuousAction() {
+    if (this.continuousInterval) {
+        clearInterval(this.continuousInterval);
+        this.continuousInterval = null;
+    }
+}
+
+
+    // ---------- MUSIC CONTROL METHODS ----------
+playMusic() {
+    if (!this.musicEnabled) return;
+
+    // Determine next track index
+    if (this.shuffleEnabled) {
+        // Pick a random track different from the current one (optional)
+        let newIndex;
+        do {
+            newIndex = Math.floor(Math.random() * this.trackList.length);
+        } while (this.trackList.length > 1 && newIndex === this.currentTrackIndex);
+        this.currentTrackIndex = newIndex;
+    } else {
+        // Sequential (already handled by onended, but we set index)
+        // If called externally, we use the current index.
+    }
+
+    const src = `music/${this.trackList[this.currentTrackIndex]}`;
+    this.musicPlayer.src = src;
+    this.musicPlayer.play()
+        .then(() => {
+            this.musicPlaying = true;
+        })
+        .catch(err => {
+            console.error('Music play failed:', err);
+            this.musicPlaying = false;
+        });
+}
+    
+sstopMusic() {
+    this.musicPlayer.pause();
+    this.musicPlayer.currentTime = 0; // reset to beginning
+    this.musicPlaying = false;
+}
+
+pauseMusic() {
+    if (this.musicPlaying) {
+        this.musicPlayer.pause();
+        this.musicPlaying = false;
+    }
+}
+
+resumeMusic() {
+    if (this.musicEnabled && !this.musicPlaying && this.musicPlayer.src) {
+        this.musicPlayer.play()
+            .then(() => this.musicPlaying = true)
+            .catch(() => this.musicPlaying = false);
+    }
+}
+
+setMusicVolume(vol) {
+    this.musicVolume = Math.max(0, Math.min(1, vol));
+    if (this.musicPlaying) {
+        this.musicTracks[this.currentTrack].volume = this.musicVolume;
+    }
+    this.saveSettings();
+}
         initUI() {
             this.draw();
             this.drawNext();
             this.drawHold();
             this.drawPreview();
             this.updateUI();
+            this.setupMobileControls();
+            this.toggleMobileControls(); // apply initial state
         }
 
         setupEvents() {
@@ -1179,24 +1432,24 @@ this.keys[e.keyCode] = false;
         });
     }
         showControls() {
-        const modal = document.getElementById('controls-modal');
-        const list = document.getElementById('controls-list');
-        const controls = [
-            {key:'MOVE_LEFT', label:'Move Left'},
-            {key:'MOVE_RIGHT', label:'Move Right'},
-            {key:'SOFT_DROP', label:'Soft Drop'},
-            {key:'HARD_DROP', label:'Hard Drop'},
-            {key:'ROTATE_CW', label:'Rotate CW'},
-            {key:'ROTATE_CCW', label:'Rotate CCW'},
-            {key:'ROTATE_180', label:'Rotate 180°'},
-            {key:'HOLD', label:'Hold'},
-            {key:'PAUSE', label:'Pause'}
-        ];
-        
-        // Build only the controls grid HTML (not the sliders)
-        let html = '';
-        controls.forEach(c => {
-            html += `
+    const modal = document.getElementById('controls-modal');
+    const list = document.getElementById('controls-list');
+    const controls = [
+        {key:'MOVE_LEFT', label:'Move Left'},
+        {key:'MOVE_RIGHT', label:'Move Right'},
+        {key:'SOFT_DROP', label:'Soft Drop'},
+        {key:'HARD_DROP', label:'Hard Drop'},
+        {key:'ROTATE_CW', label:'Rotate CW'},
+        {key:'ROTATE_CCW', label:'Rotate CCW'},
+        {key:'ROTATE_180', label:'Rotate 180°'},
+        {key:'HOLD', label:'Hold'},
+        {key:'PAUSE', label:'Pause'}
+    ];
+    
+    // Build controls grid
+    let html = '';
+    controls.forEach(c => {
+        html += `
     <div class="control-row">
         <span class="control-label">${c.label}</span>
         <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -1205,122 +1458,223 @@ this.keys[e.keyCode] = false;
         </div>
     </div>
 `;
-        });
-        list.innerHTML = html;
+    });
+    list.innerHTML = html;
 
-        // Add change button listeners
-        document.querySelectorAll('.control-change').forEach(btn => {
-            btn.addEventListener('click', (e)=>{
-                this.listeningAction = e.target.dataset.action;
-                this.isListening = true;
-                e.target.textContent = 'Press key...';
+    // Add change button listeners
+    document.querySelectorAll('.control-change').forEach(btn => {
+        btn.addEventListener('click', (e)=>{
+            this.listeningAction = e.target.dataset.action;
+            this.isListening = true;
+            e.target.textContent = 'Press key...';
+        });
+    });
+
+    // DAS/ARR sliders
+    document.getElementById('das-slider').value = this.DAS;
+    document.getElementById('arr-slider').value = this.ARR;
+    document.getElementById('das-value').textContent = this.DAS;
+    document.getElementById('arr-value').textContent = this.ARR;
+
+    // Soft Drop Factor slider
+    const sliderRow = document.querySelector('.slider-row');
+    if (sliderRow) {
+        if (!document.getElementById('sdf-slider')) {
+            const sdfGroup = document.createElement('div');
+            sdfGroup.className = 'slider-group';
+            sdfGroup.innerHTML = `
+                <label>Soft Drop Factor: <span id="sdf-value">${this.softDropFactor}</span>x</label>
+                <input type="range" id="sdf-slider" min="1" max="200" value="${this.softDropFactor}" step="1">
+                <small style="color:#888; display:block; margin-top:4px;">Higher = faster (200 ≈ instant)</small>
+            `;
+            sliderRow.appendChild(sdfGroup);
+        } else {
+            document.getElementById('sdf-slider').value = this.softDropFactor;
+            document.getElementById('sdf-value').textContent = this.softDropFactor;
+        }
+    }
+
+    const modalButtons = document.querySelector('.modal-buttons');
+    const modalContent = document.querySelector('.modal-content');
+
+    // Sonic Drop checkbox
+    if (modalContent) {
+        if (!document.getElementById('sonic-checkbox')) {
+            const sonicContainer = document.createElement('div');
+            sonicContainer.style.margin = '15px 0 10px 0';
+            sonicContainer.style.textAlign = 'left';
+            sonicContainer.innerHTML = `
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                    <input type="checkbox" id="sonic-checkbox" ${this.sonicDrop ? 'checked' : ''}>
+                    <span style="color:#ccc;">Sonic Drop (∞ mode) - instant soft drop without locking</span>
+                </label>
+            `;
+            modalContent.insertBefore(sonicContainer, modalButtons);
+        } else {
+            document.getElementById('sonic-checkbox').checked = this.sonicDrop;
+        }
+    }
+
+    // Sound Pack Selector
+    if (modalButtons) {
+        const oldContainer = document.getElementById('sound-pack-container');
+        if (oldContainer) oldContainer.remove();
+
+        const soundPackHTML = `
+            <div id="sound-pack-container" style="margin:1rem 0;">
+                <label style="display:block; font-family:var(--mono); color:var(--accent); margin-bottom:0.5rem;">
+                    Sound Pack
+                </label>
+                <div style="display:flex; gap:1.5rem;">
+                    <label style="display:flex; align-items:center; gap:0.3rem;">
+                        <input type="radio" name="soundPack" value="glitch" ${this.soundPack === 'glitch' ? 'checked' : ''}>
+                        <span>Glitch</span>
+                    </label>
+                    <label style="display:flex; align-items:center; gap:0.3rem;">
+                        <input type="radio" name="soundPack" value="hardstyle" ${this.soundPack === 'hardstyle' ? 'checked' : ''}>
+                        <span>DISTORTIOOOOOON (enable me if you want brain damage)</span>
+                    </label>
+                </div>
+            </div>
+        `;
+        modalButtons.insertAdjacentHTML('beforebegin', soundPackHTML);
+
+        document.querySelectorAll('input[name="soundPack"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                this.soundPack = e.target.value;
+                this.saveSettings();
             });
         });
+    }
 
-        // Set DAS/ARR slider values (they already exist in the modal)
-        document.getElementById('das-slider').value = this.DAS;
-        document.getElementById('arr-slider').value = this.ARR;
-        document.getElementById('das-value').textContent = this.DAS;
-        document.getElementById('arr-value').textContent = this.ARR;
+    // Volume & Mute Controls
+    const volumeContainerId = 'volume-controls-container';
+    const oldVolumeContainer = document.getElementById(volumeContainerId);
+    if (oldVolumeContainer) oldVolumeContainer.remove();
 
-        // ============ NEW: Soft Drop Factor slider (add to existing slider row) ============
-        const sliderRow = document.querySelector('.slider-row');
-        if (sliderRow) {
-            // Check if SDF slider already exists to avoid duplicates
-            if (!document.getElementById('sdf-slider')) {
-                // Create new slider group for Soft Drop Factor
-                const sdfGroup = document.createElement('div');
-                sdfGroup.className = 'slider-group';
-                sdfGroup.innerHTML = `
-                    <label>Soft Drop Factor: <span id="sdf-value">${this.softDropFactor}</span>x</label>
-                    <input type="range" id="sdf-slider" min="1" max="200" value="${this.softDropFactor}" step="1">
-                    <small style="color:#888; display:block; margin-top:4px;">Higher = faster (200 ≈ instant)</small>
-                `;
-                sliderRow.appendChild(sdfGroup);
-            } else {
-                // Just update values if it already exists
-                document.getElementById('sdf-slider').value = this.softDropFactor;
-                document.getElementById('sdf-value').textContent = this.softDropFactor;
-            }
-        }
-const modalButtons = document.querySelector('.modal-buttons');
-        // ============ NEW: Sonic Drop checkbox ============
-        const modalContent = document.querySelector('.modal-content');
-        if (modalContent) {
-            // Check if sonic checkbox already exists
-            if (!document.getElementById('sonic-checkbox')) {
-                const sonicContainer = document.createElement('div');
-                sonicContainer.style.margin = '15px 0 10px 0';
-                sonicContainer.style.textAlign = 'left';
-                sonicContainer.innerHTML = `
-                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-                        <input type="checkbox" id="sonic-checkbox" ${this.sonicDrop ? 'checked' : ''}>
-                        <span style="color:#ccc;">Sonic Drop (∞ mode) - instant soft drop without locking</span>
-                    </label>
-                `;
-                // Insert before the modal buttons
-                const modalButtons = document.querySelector('.modal-buttons');
-                modalContent.insertBefore(sonicContainer, modalButtons);
-            } else {
-                // Just update checkbox state
-                document.getElementById('sonic-checkbox').checked = this.sonicDrop;
-            }
-        }
-// ============ Sound Pack Selector ============
-if (modalButtons) {
-    // Remove old sound pack container if it exists
-    const oldContainer = document.getElementById('sound-pack-container');
-    if (oldContainer) oldContainer.remove();
-
-    const soundPackHTML = `
-        <div id="sound-pack-container" style="margin:1rem 0;">
-            <label style="display:block; font-family:var(--mono); color:var(--accent); margin-bottom:0.5rem;">
-                Sound Pack
+    const volumeHTML = `
+        <div id="${volumeContainerId}" style="margin:1rem 0;">
+            <label style="display:flex; align-items:center; gap:0.5rem; font-family:var(--mono); color:var(--accent);">
+                <input type="checkbox" id="mute-checkbox" ${this.muted ? 'checked' : ''}>
+                <span>Mute All Sounds</span>
             </label>
-            <div style="display:flex; gap:1.5rem;">
-                <label style="display:flex; align-items:center; gap:0.3rem;">
-                    <input type="radio" name="soundPack" value="glitch" ${this.soundPack === 'glitch' ? 'checked' : ''}>
-                    <span>Glitch</span>
-                </label>
-                <label style="display:flex; align-items:center; gap:0.3rem;">
-                    <input type="radio" name="soundPack" value="hardstyle" ${this.soundPack === 'hardstyle' ? 'checked' : ''}>
-                    <span>DISTORTIOOOOOON (enable me if you want brain damage)</span>
-                </label>
+            <div class="slider-group" style="margin-top:0.5rem;">
+                <label>Sound Volume: <span id="volume-value">${Math.round(this.soundVolume * 100)}</span>%</label>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="${this.soundVolume}">
             </div>
         </div>
     `;
-    modalButtons.insertAdjacentHTML('beforebegin', soundPackHTML);
+    modalButtons.insertAdjacentHTML('beforebegin', volumeHTML);
 
-    // Add event listeners to the new radios
-    document.querySelectorAll('input[name="soundPack"]').forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            this.soundPack = e.target.value;
-            this.saveSettings();
-        });
+    // Music Controls
+    const musicContainerId = 'music-controls-container';
+    const oldMusicContainer = document.getElementById(musicContainerId);
+    if (oldMusicContainer) oldMusicContainer.remove();
+
+    const musicHTML = `
+        <div id="${musicContainerId}" style="margin:1rem 0;">
+            <label style="display:flex; align-items:center; gap:0.5rem; font-family:var(--mono); color:var(--accent);">
+                <input type="checkbox" id="music-enable" ${this.musicEnabled ? 'checked' : ''}>
+                <span>Background Music</span>
+            </label>
+            <div class="slider-group" style="margin-top:0.5rem;">
+                <label>Music Volume: <span id="music-volume-value">${Math.round(this.musicVolume * 100)}</span>%</label>
+                <input type="range" id="music-volume-slider" min="0" max="1" step="0.01" value="${this.musicVolume}">
+            </div>
+        </div>
+    `;
+    modalButtons.insertAdjacentHTML('beforebegin', musicHTML);
+
+    // Shuffle Control
+    const shuffleContainerId = 'shuffle-control-container';
+    const oldShuffleContainer = document.getElementById(shuffleContainerId);
+    if (oldShuffleContainer) oldShuffleContainer.remove();
+
+    const shuffleHTML = `
+        <div id="${shuffleContainerId}" style="margin:0.5rem 0;">
+            <label style="display:flex; align-items:center; gap:0.5rem; font-family:var(--mono); color:var(--accent);">
+                <input type="checkbox" id="shuffle-checkbox" ${this.shuffleEnabled ? 'checked' : ''}>
+                <span>Shuffle Playlist</span>
+            </label>
+        </div>
+    `;
+    modalButtons.insertAdjacentHTML('beforebegin', shuffleHTML);
+
+    //Mobile Controls Toggle 
+const mobileToggleContainerId = 'mobile-toggle-container';
+const oldMobileToggle = document.getElementById(mobileToggleContainerId);
+if (oldMobileToggle) oldMobileToggle.remove();
+
+const mobileToggleHTML = `
+    <div id="${mobileToggleContainerId}" style="margin:0.5rem 0;">
+        <label style="display:flex; align-items:center; gap:0.5rem; font-family:var(--mono); color:var(--accent);">
+            <input type="checkbox" id="mobile-controls-toggle" ${this.mobileControlsEnabled ? 'checked' : ''}>
+            <span>Show on‑screen controls (for touch devices)</span>
+        </label>
+    </div>
+`;
+modalButtons.insertAdjacentHTML('beforebegin', mobileToggleHTML);
+
+document.getElementById('mobile-controls-toggle').addEventListener('change', (e) => {
+    this.mobileControlsEnabled = e.target.checked;
+    this.toggleMobileControls();
+    this.saveSettings();
+});
+
+    // Event Listeners for the new controls
+    document.getElementById('mute-checkbox').addEventListener('change', (e) => {
+        this.muted = e.target.checked;
+        this.saveSettings();
     });
-}
-        // Add event listeners for new controls (remove old ones first to avoid duplicates)
-        const oldSdfSlider = document.getElementById('sdf-slider');
-        if (oldSdfSlider) {
-            const newSdfSlider = oldSdfSlider.cloneNode(true);
-            oldSdfSlider.parentNode.replaceChild(newSdfSlider, oldSdfSlider);
-            newSdfSlider.addEventListener('input', (e) => {
-                this.softDropFactor = parseInt(e.target.value);
-                document.getElementById('sdf-value').textContent = this.softDropFactor;
-            });
-        }
 
-        const oldSonicCheck = document.getElementById('sonic-checkbox');
-        if (oldSonicCheck) {
-            const newSonicCheck = oldSonicCheck.cloneNode(true);
-            oldSonicCheck.parentNode.replaceChild(newSonicCheck, oldSonicCheck);
-            newSonicCheck.addEventListener('change', (e) => {
-                this.sonicDrop = e.target.checked;
-            });
-        }
+    document.getElementById('volume-slider').addEventListener('input', (e) => {
+        this.soundVolume = parseFloat(e.target.value);
+        document.getElementById('volume-value').textContent = Math.round(this.soundVolume * 100);
+        this.saveSettings();
+    });
 
-        modal.style.display = 'flex';
+    document.getElementById('music-enable').addEventListener('change', (e) => {
+        this.musicEnabled = e.target.checked;
+        if (this.musicEnabled && this.active && !this.paused) {
+            this.resumeMusic();
+        } else {
+            this.pauseMusic();
+        }
+        this.saveSettings();
+    });
+
+    document.getElementById('shuffle-checkbox').addEventListener('change', (e) => {
+        this.shuffleEnabled = e.target.checked;
+        this.saveSettings();
+    });
+
+    document.getElementById('music-volume-slider').addEventListener('input', (e) => {
+        this.setMusicVolume(parseFloat(e.target.value));
+        document.getElementById('music-volume-value').textContent = Math.round(this.musicVolume * 100);
+    });
+
+    // Old SDF slider and sonic checkbox listeners
+    const oldSdfSlider = document.getElementById('sdf-slider');
+    if (oldSdfSlider) {
+        const newSdfSlider = oldSdfSlider.cloneNode(true);
+        oldSdfSlider.parentNode.replaceChild(newSdfSlider, oldSdfSlider);
+        newSdfSlider.addEventListener('input', (e) => {
+            this.softDropFactor = parseInt(e.target.value);
+            document.getElementById('sdf-value').textContent = this.softDropFactor;
+        });
     }
+
+    const oldSonicCheck = document.getElementById('sonic-checkbox');
+    if (oldSonicCheck) {
+        const newSonicCheck = oldSonicCheck.cloneNode(true);
+        oldSonicCheck.parentNode.replaceChild(newSonicCheck, oldSonicCheck);
+        newSonicCheck.addEventListener('change', (e) => {
+            this.sonicDrop = e.target.checked;
+        });
+    }
+
+    modal.style.display = 'flex';
+}
         
 
         hideControls() {
@@ -1332,6 +1686,5 @@ if (modalButtons) {
     // Initialize game
 
     const game = new Tetris();
-
 
 
