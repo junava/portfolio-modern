@@ -9,6 +9,19 @@
       --accent: #888;
       --accent-soft: #aaa;
     }
+
+    /* —————————— DARK MODE FLASH PROTECTION —————————— */
+html {
+  background-color: #0a0a0a; /* dark default */
+}
+
+html:not(.dark) {
+  background-color: #f9f9f9; /* light mode override */
+}
+
+body {
+  background-color: inherit;
+}
     
     /* —————————— base / reset —————————— */
     * {
@@ -1486,19 +1499,6 @@ body.dark .inspiration-symbol {
   color: #666;
 }
 
-/* —————————— DARK MODE FLASH PROTECTION —————————— */
-html {
-  background-color: #0a0a0a; /* dark default */
-}
-
-html:not(.dark) {
-  background-color: #f9f9f9; /* light mode override */
-}
-
-body {
-  background-color: inherit;
-}
-
 /* —————————— LOADING SCREEN — FIXED SIZE, NO JERK —————————— */
 .loading-screen {
   position: fixed;
@@ -1882,10 +1882,6 @@ body.loading .loading-screen * {
   pointer-events: none; /* keep clickable if needed */
 }
 
-.live-calc-btn {
-  cursor: none !important;
-}
-
 /* Disable text selection in gallery */
 .gallery-section,
 .gallery-header,
@@ -1895,5 +1891,180 @@ body.loading .loading-screen * {
   -webkit-user-select: none !important;
   -moz-user-select: none !important;
   -ms-user-select: none !important;
+}
 
+/* ---------- Menu button – top right ---------- */
+.menu-btn {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  background: transparent;
+  border: 1px solid #333;
+  padding: 0.4rem 1rem;
+  font-family: var(--mono, 'IBM Plex Mono', monospace);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #888;
+  cursor: pointer;
+  z-index: 101;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+
+.menu-btn .nav_plus {
+  display: inline-block;
+  transition: padding 0.2s ease;
+}
+
+.menu-btn:hover .nav_plus {
+  padding: 0 0.2em;
+}
+
+.menu-btn:hover {
+  background: #ebebeb;
+  color: #0a0a0a;
+  border-color: #ebebeb;
+}
+
+/* ---------- Chapters panel – slides from right ---------- */
+.chapters-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 280px;
+  height: 100vh;
+  background: #0a0a0a;               /* dark mode default */
+  border-left: 1px solid #333;
+  z-index: 200;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  padding: 2rem;
+  font-family: var(--mono, monospace);
+  overflow-y: auto;
+}
+
+.chapters-panel.active {
+  transform: translateX(0);
+}
+
+/* ---------- Light mode overrides for the panel ---------- */
+body:not(.dark) .chapters-panel {
+  background: #f9f9f9;
+  border-left-color: #d4d4d4;
+}
+
+body:not(.dark) .chapters-title {
+  color: #666;
+}
+
+body:not(.dark) .chapters-close {
+  border-color: #ccc;
+  color: #666;
+}
+
+body:not(.dark) .chapters-close:hover {
+  background: #0c0c0c;
+  color: white;
+  border-color: #0c0c0c;
+}
+
+/* ---------- Panel header ---------- */
+.chapters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #333;
+  width: 100%;
+  gap: 1rem;
+}
+
+body:not(.dark) .chapters-header {
+  border-bottom-color: #d4d4d4;
+}
+
+.chapters-title {
+  color: #888;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 1;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Close button – matches menu button aesthetic ---------- */
+.chapters-close {
+  background: transparent;
+  border: 1px solid #333;
+  padding: 0.4rem 1rem;
+  font-family: var(--mono, 'IBM Plex Mono', monospace);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #888;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.chapters-close .nav_plus {
+  display: inline-block;
+  transition: padding 0.2s ease;
+}
+
+.chapters-close:hover .nav_plus {
+  padding: 0 0.2em;
+}
+
+.chapters-close:hover {
+  background: #ebebeb;
+  color: #0a0a0a;
+  border-color: #ebebeb;
+}
+
+/* ---------- Dark mode close button (already covered, but explicit) ---------- */
+body.dark .chapters-close {
+  border-color: #444;
+  color: #aaa;
+}
+
+body.dark .chapters-close:hover {
+  background: #ebebeb;
+  color: #0a0a0a;
+  border-color: #ebebeb;
+}
+
+/* ---------- Chapter links ---------- */
+.chapter-link {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  display: block;
+  padding: 0.5rem 0;
+  color: #888;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.chapter-link:hover {
+  background-color: #eaeaea !important;
+  color: #070707 !important;
+  padding-left: 0.333em;
+  padding-right: 0.333em;
+}
+
+/* Optional yellow border effect (if you have a wrapper) */
+.chapter-link:hover .menu_link_wrap {
+  border-top: 1px solid #ffb700 !important;
+}
+
+/* Dark mode chapter link hover */
+body.dark .chapter-link:hover {
+  background-color: #ffffff !important;
+  color: #000 !important;
 }
