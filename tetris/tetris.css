@@ -717,5 +717,70 @@ body.dark .sonic-checkbox input[type="checkbox"] {
     @media (max-width: 800px) {
       .cursor { display: none; }
       body, button { cursor: auto; }
-
     }
+    .countdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    font-family: var(--sans);
+    color: white;
+    font-size: 10rem;
+    pointer-events: none;
+    transition: opacity 0.2s;
+} 
+
+/* mobile controls */
+.mobile-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 300px;
+}
+
+.mobile-controls.hidden {
+    display: none;
+}
+
+.mobile-controls .control-row {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.mobile-btn {
+    background: transparent;
+    border: 1px solid var(--border-light);
+    color: var(--text-light);
+    font-family: var(--mono);
+    font-size: 1.5rem;
+    padding: 0.75rem 1rem;
+    min-width: 3rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.1s, border-color 0.1s;
+    flex: 1 0 auto;
+}
+
+.mobile-btn:hover {
+    background: var(--button-hover-light);
+    border-color: var(--text-light);
+}
+
+body.dark .mobile-btn {
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+body.dark .mobile-btn:hover {
+    background: var(--button-hover-dark);
+    border-color: var(--text-dark);
+}
