@@ -22,7 +22,17 @@ html:not(.dark) {
 body {
   background-color: inherit;
 }
-    
+
+* {
+  cursor: none !important;
+}
+
+/* Ensure the custom cursor is visible */
+#cursor, .cursor {
+  display: flex !important;
+  opacity: 1 !important;
+}
+
     /* —————————— base / reset —————————— */
     * {
       margin: 0;
@@ -2068,3 +2078,4 @@ body.dark .chapter-link:hover {
   background-color: #ffffff !important;
   color: #000 !important;
 }
+
