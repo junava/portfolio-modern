@@ -21,7 +21,7 @@
   // Text to type
   const texts = {
     line1: '// SYSTEM BOOT',
-    line2: 'PORTFOLIO v2.4.2',
+    line2: 'PORTFOLIO v2.4.3',
     modules: [
       '⌘ core.init()',
       '⎔ calculator.js',
@@ -680,4 +680,5 @@ handleOnMove({ clientX: 0 });
     });
   });
 })();
+
 
